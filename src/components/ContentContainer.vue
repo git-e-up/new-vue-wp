@@ -1,5 +1,5 @@
 <template>
-  <div class="what">
+  <div v-if="content[1]" class="what">
     <div v-html="content[1].htmlcontent"></div>
   </div>
 </template>
