@@ -2,7 +2,7 @@
   <div id="app">
     <img src="./assets/logo.png">
     <ul class="main-nav">
-      <li class="main-nav__item" ref="mainnavitem" v-for="(item, index) in items" :key="index" v-html="item.message" :data-postIndex="index+2" v-on:click="bounce">
+      <li class="main-nav__item" ref="mainnavitem" v-for="(item, index) in items" :key="index" v-html="item.message + index" :data-postIndex="index+2" v-on:click="bounce">
       </li>
     </ul>
     <div class="ssl-warning" v-bind:class="{ active: isActive }">
@@ -12,6 +12,7 @@
       <transition name="slide-fade">
         <h1 class="init-header" v-if="show">{{ introMessage }}</h1>
       </transition>
+      <ContentContainer message="yo"/>
     </div>
     <HelloWorld msg="Welcome to Your Vue.js App"/>
   </div>
@@ -19,19 +20,21 @@
 
 <script>
 import HelloWorld from './components/HelloWorld.vue'
+import ContentContainer from './components/ContentContainer.vue'
 
 
 export default {
   name: 'app',
   components: {
-    HelloWorld
+    HelloWorld,
+    ContentContainer
   },
   data: function() {
     return{
       items: [],
       isActive: false,
       show: true,
-      introMessage:  'Hiyo'
+      introMessage:  'Hiyo',
     }
   },
   mounted: function(){
@@ -61,9 +64,10 @@ export default {
       })
       event.target.classList.add('main-nav__item--bouncing');
       this.introMessage = event.target.innerHTML;
+      console.log(event)
     }
   },
-  updated(){
+  created(){
      this.begin()
   },
 
