@@ -40,7 +40,8 @@ export default {
     }
   },
   mounted: function(){
-    this.$http.get('http://matthewlissner.com/wp-json/wp/v2/hot_sauces?filter[orderby]=date&order=asc').then(response => {
+    let dt= Date.now();
+    this.$http.get(`http://matthewlissner.com/wp-json/wp/v2/hot_sauces?filter[orderby]=date&order=asc&datenow=${dt}`).then(response => {
       let x = this;
       response.body.forEach(function(val){
         x.items.push({message: val.title.rendered})
@@ -68,7 +69,7 @@ export default {
       this.selectedIndex = this.items.indexOf(item);
     }
   },
-  created(){
+  updated(){
      this.begin()
   },
 
