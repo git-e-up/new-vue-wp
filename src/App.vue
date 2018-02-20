@@ -55,10 +55,8 @@ export default {
   methods: {
     begin: function () {
       setTimeout(() => {
-        let elements = document.getElementsByClassName('main-nav__item');
-        elements[0].classList.add('main-nav__item--bouncing');
-        console.log(elements[0].innerHTML);
-        this.introMessage = this.items[0].message;
+        this.$refs.mainnavitem[0].click()
+
       }, 1000);
     },
     bounce: function (item, event) {
