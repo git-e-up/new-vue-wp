@@ -2,7 +2,7 @@
   <div id="app">
     <img src="./assets/logo.png">
     <ul class="main-nav">
-      <li class="main-nav__item" ref="mainnavitem" v-for="(item, index) in items" :key="index" v-html="item.message + index" :data-postIndex="index+2" v-on:click="bounce">
+      <li class="main-nav__item" ref="mainnavitem" v-for="(item, index) in items" :key="index" v-html="item.message + index" :data-postIndex="index+2" v-on:click="bounce(item, $event)">
       </li>
     </ul>
     <div class="ssl-warning" v-bind:class="{ active: isActive }">
@@ -10,9 +10,11 @@
     </div>
     <div class="col-xs-12 text-center info">
       <transition name="slide-fade">
-        <h1 class="init-header" v-if="show">{{ introMessage }}</h1>
+        <h1 class="init-header" v-if="show" v-html="introMessage"></h1>
       </transition>
-      <ContentContainer message="yo"/>
+      <div v-if="content[this.selectedIndex]">
+        <div v-html="content[this.selectedIndex].htmlcontent"></div>
+      </div>
     </div>
     <HelloWorld msg="Welcome to Your Vue.js App"/>
   </div>
@@ -20,20 +22,20 @@
 
 <script>
 import HelloWorld from './components/HelloWorld.vue'
-import ContentContainer from './components/ContentContainer.vue'
 
 
 export default {
   name: 'app',
   components: {
-    HelloWorld,
-    ContentContainer
+    HelloWorld
   },
   data: function() {
     return{
       items: [],
+      content: [],
       isActive: false,
       show: true,
+      selectedIndex: '',
       introMessage:  'Hiyo',
     }
   },
@@ -42,6 +44,7 @@ export default {
       let x = this;
       response.body.forEach(function(val){
         x.items.push({message: val.title.rendered})
+        x.content.push({htmlcontent: val.content.rendered})
       })
     }, () => {
       console.log('sorry about that');
@@ -58,13 +61,13 @@ export default {
         this.introMessage = this.items[0].message;
       }, 1000);
     },
-    bounce: function (event) {
+    bounce: function (item, event) {
       this.$refs.mainnavitem.forEach(function(val){
         val.classList.remove('main-nav__item--bouncing');
       })
       event.target.classList.add('main-nav__item--bouncing');
-      this.introMessage = event.target.innerHTML;
-      console.log(event)
+      this.introMessage = item.message;
+      this.selectedIndex = this.items.indexOf(item);
     }
   },
   created(){
