@@ -70,7 +70,8 @@ export default {
     },
     dontBounce: function(){
       let i = 0
-      while (i < this.items.length-1){
+      // reset all itemActive properties back to false
+      while (i < this.items.length){
         this.itemActive[i].tf = false
         i++
       }
