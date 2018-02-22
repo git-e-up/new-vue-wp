@@ -10,7 +10,12 @@
     </div>
     <div class="col-xs-12 text-center info">
       <transition name="slide-fade">
-        <h1 class="init-header" v-if="show" v-html="introMessage"></h1>
+        <span v-if="content[this.selectedIndex]">
+          <h1 class="init-header" v-html="items[this.selectedIndex].message"></h1>
+        </span>
+        <span v-else>
+          <h1 class="init-header" v-if="show" v-html="introMessage"></h1>
+        </span>
       </transition>
       <div v-if="content[this.selectedIndex]">
         <span class="info__left-arrow" v-on:click="prevPost"></span>
