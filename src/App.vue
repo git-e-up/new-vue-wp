@@ -2,7 +2,7 @@
   <div id="app">
     <img src="./assets/logo.png">
     <ul class="main-nav">
-      <li class="main-nav__item" ref="mainnavitem" v-for="(item, index) in items" :key="index" v-html="item.message + index" :data-postIndex="index+2" v-on:click="bounce(item, $event)">
+      <li class="main-nav__item" ref="mainnavitem" v-for="(item, index) in items" :key="index" v-html="item.message" :data-postIndex="index+2" v-on:click="bounce(item, $event)">
       </li>
     </ul>
     <div class="ssl-warning" v-bind:class="{ active: isActive }">
@@ -13,10 +13,12 @@
         <h1 class="init-header" v-if="show" v-html="introMessage"></h1>
       </transition>
       <div v-if="content[this.selectedIndex]">
+        <span class="info__left-arrow" v-on:click="prevPost"></span>
         <div v-html="content[this.selectedIndex].htmlcontent"></div>
+        <span class="info__right-arrow" v-on:click="nextPost"></span>
       </div>
     </div>
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <!-- <HelloWorld msg="Welcome to Your Vue.js App"/> -->
   </div>
 </template>
 
@@ -67,9 +69,23 @@ export default {
       event.target.classList.add('main-nav__item--bouncing');
       this.introMessage = item.message;
       this.selectedIndex = this.items.indexOf(item);
+    },
+    nextPost: function () {
+      let count = this.items.length
+      this.selectedIndex++;
+      if (this.selectedIndex > (count-1)){
+        this.selectedIndex = 0
+      }
+    },
+    prevPost: function () {
+      let count = this.items.length
+      this.selectedIndex--;
+      if (this.selectedIndex < 0){
+        this.selectedIndex = count-1
+      }
     }
   },
-  updated(){
+  created(){
      this.begin()
   },
 
@@ -87,6 +103,9 @@ export default {
 }
 </style>
 <style lang="scss">
+img {
+  display: none;
+}
 // run: sass --watch styles/style.scss:output.css
 * {
   font-family: 'futura-pt', 'Libre Franklin', sans-serif;
@@ -157,6 +176,7 @@ a {
   background-color: $blue-steel;
   color: $off-white;
   margin-bottom: 100px;
+  position: relative;
 }
 .info__list {
   display: flex;
