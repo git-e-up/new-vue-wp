@@ -68,15 +68,16 @@ export default {
         this.$refs.mainnavitem[0].click()
       }, 1000);
     },
-
-    bounce: function(item){
-      // let bounceItem = ite
-      let itemInd = this.items.indexOf(item)
+    dontBounce: function(){
       let i = 0
       while (i < this.items.length-1){
         this.itemActive[i].tf = false
         i++
       }
+    },
+    bounce: function(item){
+      let itemInd = this.items.indexOf(item)
+      this.dontBounce()
       this.itemActive[itemInd].tf = true
     },
     thisPost: function (item){
@@ -89,6 +90,8 @@ export default {
       if (this.selectedIndex > (count-1)){
         this.selectedIndex = 0
       }
+      this.dontBounce()
+      this.itemActive[this.selectedIndex].tf = true
     },
     prevPost: function () {
       let count = this.items.length
@@ -96,6 +99,8 @@ export default {
       if (this.selectedIndex < 0){
         this.selectedIndex = count-1
       }
+      this.dontBounce()
+      this.itemActive[this.selectedIndex].tf = true
     }
   },
   beforeMount(){
