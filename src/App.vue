@@ -2,7 +2,7 @@
   <div id="app">
     <img src="./assets/logo.png">
     <ul class="main-nav">
-      <li class="main-nav__item" ref="mainnavitem" v-for="(item, index) in items" :key="index" v-html="item.message" :data-postIndex="index+2" v-on:click="bounce(item, $event)">
+      <li class="main-nav__item" ref="mainnavitem" v-for="(item, index) in items" :key="index" v-html="item.message" :data-postIndex="index+2" v-on:click="bounce(item, $event); thisPost(item);">
       </li>
     </ul>
     <div class="ssl-warning" v-bind:class="{ active: isActive }">
@@ -64,7 +64,6 @@ export default {
     begin: function () {
       setTimeout(() => {
         this.$refs.mainnavitem[0].click()
-
       }, 1000);
     },
     bounce: function (item, event) {
@@ -72,6 +71,8 @@ export default {
         val.classList.remove('main-nav__item--bouncing');
       })
       event.target.classList.add('main-nav__item--bouncing');
+    },
+    thisPost: function (item){
       this.introMessage = item.message;
       this.selectedIndex = this.items.indexOf(item);
     },
@@ -90,7 +91,7 @@ export default {
       }
     }
   },
-  created(){
+  beforeMount(){
      this.begin()
   },
 
