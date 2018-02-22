@@ -2,7 +2,7 @@
   <div id="app">
     <img src="./assets/logo.png">
     <ul class="main-nav">
-      <li class="main-nav__item" ref="mainnavitem" v-for="(item, index) in items" :key="index" v-html="item.message" :data-postIndex="index+2" v-on:click="bounce(item); thisPost(item);" v-bind:class="{'main-nav__item--bouncing': itemActive[index].tf}">
+      <li class="main-nav__item" ref="mainnavitem" v-for="(item, index) in items" :key="index" v-html="item.message" :data-postIndex="index+2" v-on:click="bounce(item); thisPost(item);" v-bind:class="{'main-nav__item--bouncing': itemActive[index]}">
       </li>
     </ul>
     <div class="ssl-warning" v-bind:class="{ active: isActive }">
@@ -53,7 +53,7 @@ export default {
       let x = this;
       response.body.forEach(function(val){
         x.items.push({message: val.title.rendered})
-        x.itemActive.push({tf: false})
+        x.itemActive.push(false)
         x.content.push({htmlcontent: val.content.rendered})
       })
     }, () => {
@@ -72,14 +72,14 @@ export default {
       let i = 0
       // reset all itemActive properties back to false
       while (i < this.items.length){
-        this.itemActive[i].tf = false
+        this.itemActive[i] = false
         i++
       }
     },
     bounce: function(item){
       let itemInd = this.items.indexOf(item)
       this.dontBounce()
-      this.itemActive[itemInd].tf = true
+      this.itemActive[itemInd] = true
     },
     thisPost: function (item){
       this.introMessage = item.message;
@@ -92,7 +92,7 @@ export default {
         this.selectedIndex = 0
       }
       this.dontBounce()
-      this.itemActive[this.selectedIndex].tf = true
+      this.itemActive[this.selectedIndex] = true
     },
     prevPost: function () {
       let count = this.items.length
@@ -101,7 +101,7 @@ export default {
         this.selectedIndex = count-1
       }
       this.dontBounce()
-      this.itemActive[this.selectedIndex].tf = true
+      this.itemActive[this.selectedIndex] = true
     }
   },
   beforeMount(){
