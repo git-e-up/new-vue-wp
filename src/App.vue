@@ -2,7 +2,7 @@
   <div id="app">
     <img src="./assets/logo.png">
     <ul class="main-nav">
-      <li class="main-nav__item" ref="mainnavitem" v-for="(item, index) in items" :key="index" v-html="item.message" :data-postIndex="index+2" v-on:click="bounce(item, $event); thisPost(item);">
+      <li class="main-nav__item" ref="mainnavitem" v-for="(item, index) in items" :key="index" v-html="item.message" :data-postIndex="index+2" v-on:click="bounce(item); thisPost(item);" v-bind:class="{'main-nav__item--bouncing': itemActive[index].tf}">
       </li>
     </ul>
     <div class="ssl-warning" v-bind:class="{ active: isActive }">
@@ -40,10 +40,11 @@ export default {
     return{
       items: [],
       content: [],
+      itemActive: [],
       isActive: false,
       show: true,
       selectedIndex: '',
-      introMessage:  'Hiyo',
+      introMessage:  'Hiyo'
     }
   },
   mounted: function(){
@@ -52,6 +53,7 @@ export default {
       let x = this;
       response.body.forEach(function(val){
         x.items.push({message: val.title.rendered})
+        x.itemActive.push({tf: false})
         x.content.push({htmlcontent: val.content.rendered})
       })
     }, () => {
@@ -66,11 +68,16 @@ export default {
         this.$refs.mainnavitem[0].click()
       }, 1000);
     },
-    bounce: function (item, event) {
-      this.$refs.mainnavitem.forEach(function(val){
-        val.classList.remove('main-nav__item--bouncing');
-      })
-      event.target.classList.add('main-nav__item--bouncing');
+
+    bounce: function(item){
+      // let bounceItem = ite
+      let itemInd = this.items.indexOf(item)
+      let i = 0
+      while (i < this.items.length-1){
+        this.itemActive[i].tf = false
+        i++
+      }
+      this.itemActive[itemInd].tf = true
     },
     thisPost: function (item){
       this.introMessage = item.message;
