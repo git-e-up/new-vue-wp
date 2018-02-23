@@ -20,10 +20,14 @@
       <div v-if="content[this.selectedIndex]">
         <span class="info__left-arrow" v-on:click="prevPost"></span>
         <div v-html="content[this.selectedIndex][0].contentMain"></div>
-        <div v-if="content[this.selectedIndex][1]">
-          this worked. yay.
-          <img v-for="(img, imgIndex) in content[this.selectedIndex][1].repstuff" :key="imgIndex" :src="img.featured_image_url"/>
-        </div>
+        <ul v-if="content[this.selectedIndex][1]" class="info__list">
+          <li v-for="(img, imgIndex) in content[this.selectedIndex][1].repstuff" :key="imgIndex" class="info__list__item">
+            <div class='info__popup__preview'>
+              <div class="thumbnail-container" :style="{backgroundImage:`url(' ${img.featured_image_url} ')` }  " style="background-size: cover; background-position: center center; background-repeat:no-repeat"></div>
+              <div v-html="img.post_title"></div>
+            </div>
+          </li>
+        </ul>
         <span class="info__right-arrow" v-on:click="nextPost"></span>
       </div>
     </div>
@@ -236,8 +240,10 @@ a {
 .info__popup__preview {
   padding: 5px;
   cursor: pointer;
+  transition: padding 200ms linear;
   &:hover{
     padding: 0;
+    transition: padding 200ms linear;
   }
 }
 
