@@ -19,7 +19,10 @@
       </transition>
       <div v-if="content[this.selectedIndex]">
         <span class="info__left-arrow" v-on:click="prevPost"></span>
-        <div v-html="content[this.selectedIndex].htmlcontent"></div>
+        <div v-html="content[this.selectedIndex].content.rendered"></div>
+
+        <!-- <img v-for="(img, imgIndex) in repeatablesAutocomplete" :key="imgIndex" :src="img.featured_image_url"/> -->
+
         <span class="info__right-arrow" v-on:click="nextPost"></span>
       </div>
     </div>
@@ -41,6 +44,7 @@ export default {
       items: [],
       content: [],
       itemActive: [],
+      repeatablesAutocomplete: [],
       isActive: false,
       show: true,
       selectedIndex: '',
@@ -51,11 +55,22 @@ export default {
     let dt= Date.now();
     this.$http.get(`http://matthewlissner.com/wp-json/wp/v2/hot_sauces?filter[orderby]=date&order=asc&datenow=${dt}`).then(response => {
       let x = this;
-      response.body.forEach(function(val){
+      response.body.forEach(function(val, i){
         x.items.push({message: val.title.rendered})
         x.itemActive.push(false)
-        x.content.push({htmlcontent: val.content.rendered})
+        x.content.push( val)
+        // console.log(val)
+        let repeatables = JSON.parse( val.repeatable_autocomplete );
+        // console.log(repeatables)
+        // let y = x;
+        // if (repeatables){
+        //   repeatables.forEach(function(t){
+        //     x.content.push(t)
+        //     // x.repeatablesAutocomplete.push(t)
+        //   })
+        // }
       })
+      console.log(x.content)
     }, () => {
       console.log('sorry about that');
       this.isActive = true;
@@ -63,11 +78,6 @@ export default {
     });
   },
   methods: {
-    begin: function () {
-      setTimeout(() => {
-        this.$refs.mainnavitem[0].click()
-      }, 1000);
-    },
     dontBounce: function(){
       let i = 0
       // reset all itemActive properties back to false
@@ -105,7 +115,9 @@ export default {
     }
   },
   beforeMount(){
-     this.begin()
+    setTimeout(() => {
+      this.$refs.mainnavitem[0].click()
+    }, 1000);
   },
 
 }
