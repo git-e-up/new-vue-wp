@@ -19,10 +19,11 @@
       </transition>
       <div v-if="content[this.selectedIndex]">
         <span class="info__left-arrow" v-on:click="prevPost"></span>
-        <div v-html="content[this.selectedIndex].content.rendered"></div>
-
-        <!-- <img v-for="(img, imgIndex) in repeatablesAutocomplete" :key="imgIndex" :src="img.featured_image_url"/> -->
-
+        <div v-html="content[this.selectedIndex][0].contentMain"></div>
+        <div v-if="content[this.selectedIndex][1]">
+          this worked. yay.
+          <img v-for="(img, imgIndex) in content[this.selectedIndex][1].repstuff" :key="imgIndex" :src="img.featured_image_url"/>
+        </div>
         <span class="info__right-arrow" v-on:click="nextPost"></span>
       </div>
     </div>
@@ -55,20 +56,18 @@ export default {
     let dt= Date.now();
     this.$http.get(`http://matthewlissner.com/wp-json/wp/v2/hot_sauces?filter[orderby]=date&order=asc&datenow=${dt}`).then(response => {
       let x = this;
-      response.body.forEach(function(val, i){
+      response.body.forEach(function(val){
         x.items.push({message: val.title.rendered})
         x.itemActive.push(false)
-        x.content.push( val)
-        // console.log(val)
+
         let repeatables = JSON.parse( val.repeatable_autocomplete );
-        // console.log(repeatables)
-        // let y = x;
-        // if (repeatables){
-        //   repeatables.forEach(function(t){
-        //     x.content.push(t)
-        //     // x.repeatablesAutocomplete.push(t)
-        //   })
-        // }
+        if (repeatables){
+          x.content.push([{contentMain: val.content.rendered},{repstuff: repeatables}])
+        }
+        else {
+          x.content.push( [{contentMain: val.content.rendered}])
+        }
+
       })
       console.log(x.content)
     }, () => {
