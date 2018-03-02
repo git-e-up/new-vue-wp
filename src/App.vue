@@ -33,7 +33,7 @@
       </div>
     </div>
     <!-- <HelloWorld msg="Welcome to Your Vue.js App"/> -->
-    <div class="modal-background" :class="{'modal-background--open': modalBackground }"></div>
+    <div class="modal-background" :class="{'modal-background--open': modalBackground }" v-on:click="closeModal"></div>
   </div>
 </template>
 
@@ -121,24 +121,14 @@ export default {
       this.itemActive[this.selectedIndex] = true
     },
     openModal: function (postIndex) {
-      // let popupIndex = 'popup-' + postIndex
-      // console.log(popupIndex)
-      // this.modalOpen = postIndex
-      // console.log(this.$refs[popupIndex])
-      // console.log(this[postIndex].modalOpen)
-      // this.$refs[popupIndex].modalOpen = !this.$refs[popupIndex].modalOpen
-        // post.modalOpen = true;
       this.modalBackground = true;
       this.modalOpen[postIndex]= true;
       console.log(this.modalOpen)
-
-        // console.log(post)
-
-
-        // return post.modalOpen
-      // console.log(this.content[this.selectedIndex][1].repstuff[postIndex])
-      // console.log(this.content[this.selectedIndex][1].repstuff)
-
+    },
+    closeModal: function () {
+      this.modalOpen=[];
+      this.modalBackground = false;
+      console.log(this.modalOpen)
     },
   },
   beforeMount(){
