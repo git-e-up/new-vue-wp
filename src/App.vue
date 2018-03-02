@@ -21,17 +21,19 @@
         <span class="info__left-arrow" v-on:click="prevPost"></span>
         <div v-html="content[this.selectedIndex][0].contentMain"></div>
         <ul v-if="content[this.selectedIndex][1]" class="info__list">
-          <li v-for="(img, imgIndex) in content[this.selectedIndex][1].repstuff" :key="imgIndex" class="info__list__item">
+          <li v-for="(post, postIndex) in content[this.selectedIndex][1].repstuff" :key="postIndex" class="info__list__item" v-on:click="openModal(postIndex)">
             <div class='info__popup__preview'>
-              <div class="thumbnail-container" :style="{backgroundImage:`url(' ${img.featured_image_url} ')` }  " style="background-size: cover; background-position: center center; background-repeat:no-repeat"></div>
-              <div v-html="img.post_title"></div>
+              <div class="thumbnail-container" :style="{backgroundImage:`url(' ${post.featured_image_url} ')` }  " style="background-size: cover; background-position: center center; background-repeat:no-repeat"></div>
+              <h4 v-html="post.post_title"></h4>
             </div>
+            <section class='info__popup' :class="{'info--show-popup':modalOpen[postIndex]}" :ref="'popup-'+postIndex"><span class='x-close'></span><div v-html="post.post_content"></div></section>
           </li>
         </ul>
         <span class="info__right-arrow" v-on:click="nextPost"></span>
       </div>
     </div>
     <!-- <HelloWorld msg="Welcome to Your Vue.js App"/> -->
+    <div class="modal-background" :class="{'modal-background--open': modalBackground }"></div>
   </div>
 </template>
 
@@ -53,7 +55,9 @@ export default {
       isActive: false,
       show: true,
       selectedIndex: '',
-      introMessage:  'Hiyo'
+      introMessage:  'Hiyo',
+      modalOpen: [],
+      modalBackground: false
     }
   },
   mounted: function(){
@@ -115,7 +119,27 @@ export default {
       }
       this.dontBounce()
       this.itemActive[this.selectedIndex] = true
-    }
+    },
+    openModal: function (postIndex) {
+      // let popupIndex = 'popup-' + postIndex
+      // console.log(popupIndex)
+      // this.modalOpen = postIndex
+      // console.log(this.$refs[popupIndex])
+      // console.log(this[postIndex].modalOpen)
+      // this.$refs[popupIndex].modalOpen = !this.$refs[popupIndex].modalOpen
+        // post.modalOpen = true;
+      this.modalBackground = true;
+      this.modalOpen[postIndex]= true;
+      console.log(this.modalOpen)
+
+        // console.log(post)
+
+
+        // return post.modalOpen
+      // console.log(this.content[this.selectedIndex][1].repstuff[postIndex])
+      // console.log(this.content[this.selectedIndex][1].repstuff)
+
+    },
   },
   beforeMount(){
     setTimeout(() => {
