@@ -130,11 +130,20 @@ export default {
       this.modalBackground = false;
       console.log(this.modalOpen)
     },
+    initClick: function () {
+      setTimeout(() => {
+        this.$refs.mainnavitem[0].click()
+        // this.bounce(this.items[0])
+        // this.thisPost(this.items[0])
+      }, 1000);
+    },
   },
-  beforeMount(){
-    setTimeout(() => {
-      this.$refs.mainnavitem[0].click()
-    }, 1000);
+  updated(){
+    if (!this.selectedIndex){
+      setTimeout(() => {
+        this.$refs.mainnavitem[0].click()
+      }, 1000);
+    }
   },
 
 }
