@@ -8,7 +8,7 @@
     <div class="ssl-warning" v-bind:class="{ active: isActive }">
       <p>Sorry, I didn't want to pay godaddy $75 for SSL so you'll need to allow your browser from unauthenticated sources</p>
     </div>
-    <div class="col-xs-12 text-center info">
+    <div class="col-xs-12 text-center info" :class="{'info--sliding-right': slidingRight, 'info--sliding-left': slidingLeft}">
       <transition name="slide-fade">
         <span v-if="content[this.selectedIndex]">
           <h1 class="init-header" v-html="items[this.selectedIndex].message"></h1>
@@ -57,7 +57,9 @@ export default {
       selectedIndex: '',
       introMessage:  'Hiyo',
       modalOpen: [],
-      modalBackground: false
+      modalBackground: false,
+      slidingRight: false,
+      slidingLeft: false
     }
   },
   mounted: function(){
@@ -103,22 +105,32 @@ export default {
       this.selectedIndex = this.items.indexOf(item);
     },
     nextPost: function () {
-      let count = this.items.length
-      this.selectedIndex++;
-      if (this.selectedIndex > (count-1)){
-        this.selectedIndex = 0
-      }
-      this.dontBounce()
-      this.itemActive[this.selectedIndex] = true
+      let thisNext = this
+      thisNext.slidingRight = true
+      setTimeout(function(){
+        let count = thisNext.items.length
+        thisNext.selectedIndex++;
+        if (thisNext.selectedIndex > (count-1)){
+          thisNext.selectedIndex = 0
+        }
+        thisNext.dontBounce()
+        thisNext.itemActive[thisNext.selectedIndex] = true
+        thisNext.slidingRight = false
+      }, 1400)
     },
     prevPost: function () {
-      let count = this.items.length
-      this.selectedIndex--;
-      if (this.selectedIndex < 0){
-        this.selectedIndex = count-1
-      }
-      this.dontBounce()
-      this.itemActive[this.selectedIndex] = true
+      let thisPrev = this
+      thisPrev.slidingLeft = true
+      setTimeout(function(){
+        let count = thisPrev.items.length
+        thisPrev.selectedIndex--;
+        if (thisPrev.selectedIndex < 0){
+          thisPrev.selectedIndex = count-1
+        }
+        thisPrev.dontBounce()
+        thisPrev.itemActive[thisPrev.selectedIndex] = true
+        thisPrev.slidingLeft = false
+      }, 1400)
     },
     openModal: function (postIndex) {
       this.modalBackground = true;
