@@ -8,7 +8,7 @@
     <div class="ssl-warning" v-bind:class="{ active: isActive }">
       <p>Sorry, I didn't want to pay godaddy $75 for SSL so you'll need to allow your browser from unauthenticated sources</p>
     </div>
-    <div class="col-xs-12 text-center info" :class="{'info--sliding-right': slidingRight, 'info--sliding-left': slidingLeft}">
+    <div class="col-xs-12 text-center info" :class="{'info--sliding-right': slidingRight, 'info--sliding-left': slidingLeft, 'info--sliding-up': slidingUp}">
       <transition name="slide-fade">
         <span v-if="content[this.selectedIndex]">
           <h1 class="init-header" v-html="items[this.selectedIndex].message"></h1>
@@ -59,7 +59,8 @@ export default {
       modalOpen: [],
       modalBackground: false,
       slidingRight: false,
-      slidingLeft: false
+      slidingLeft: false,
+      slidingUp: false
     }
   },
   mounted: function(){
@@ -101,8 +102,21 @@ export default {
       this.itemActive[itemInd] = true
     },
     thisPost: function (item){
-      this.introMessage = item.message;
-      this.selectedIndex = this.items.indexOf(item);
+      // this.introMessage = item.message;
+      // this.selectedIndex = this.items.indexOf(item);
+      this.slidingUp = true;
+      let i = item.message;
+      let s = this.items.indexOf(item);
+
+      let x = this;
+      setTimeout(function(){
+        console.log('hi');
+        x.introMessage = i;
+        x.selectedIndex = s;
+      }, 1500);
+      setTimeout(function(){
+        x.slidingUp = false;
+      }, 2500);
     },
     nextPost: function () {
       let thisNext = this
@@ -151,11 +165,12 @@ export default {
     },
   },
   updated(){
-    if (!this.selectedIndex){
-      setTimeout(() => {
-        this.$refs.mainnavitem[0].click()
-      }, 1000);
-    }
+    console.log(this.selectedIndex)
+    // if (this.selectedIndex == false){
+    //   setTimeout(() => {
+    //     this.$refs.mainnavitem[0].click()
+    //   }, 1000);
+    // }
   },
 
 }
