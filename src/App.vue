@@ -81,6 +81,11 @@ export default {
 
       })
       console.log(x.content)
+      if (this.selectedIndex == false){
+        setTimeout(() => {
+          this.$refs.mainnavitem[0].click()
+        }, 500);
+      }
     }, () => {
       console.log('sorry about that');
       this.isActive = true;
@@ -164,14 +169,18 @@ export default {
       }, 1000);
     },
   },
-  updated(){
-    console.log(this.selectedIndex)
-    // if (this.selectedIndex == false){
-    //   setTimeout(() => {
-    //     this.$refs.mainnavitem[0].click()
-    //   }, 1000);
-    // }
-  },
+  // updated(){
+  //   console.log('done')
+  //   console.log(this.selectedIndex)
+  //   if (this.selectedIndex == false){
+  //     setTimeout(() => {
+  //       // this.$refs.mainnavitem[0].click()
+  //       this.selectedIndex = 0
+  //       this.bounce(0)
+  //
+  //     }, 1000);
+  //   }
+  // },
 
 }
 </script>
