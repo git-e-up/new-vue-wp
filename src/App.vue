@@ -1,6 +1,7 @@
 <template>
   <div id="app">
     <img src="./assets/logo.png">
+    <h1 v-html="myName"></h1>
     <ul class="main-nav">
       <li class="main-nav__item" ref="mainnavitem" v-for="(item, index) in items" :key="index" v-html="item.message" :data-postIndex="index+2" v-on:click="bounce(item); thisPost(item);" v-bind:class="{'main-nav__item--bouncing': itemActive[index]}">
       </li>
@@ -60,10 +61,17 @@ export default {
       modalBackground: false,
       slidingRight: false,
       slidingLeft: false,
-      slidingUp: false
+      slidingUp: false,
+      myName: '<div>sup</div>'
     }
   },
   mounted: function(){
+    this.$http.get('http://matthewlissner.com/wp-json/wp/v2/svgs/matthew').then(response => {
+      console.log('yassss')
+    }, () => {
+      console.log('wtf')
+    });
+
     let dt= Date.now();
     this.$http.get(`http://matthewlissner.com/wp-json/wp/v2/hot_sauces?filter[orderby]=date&order=asc&datenow=${dt}`).then(response => {
       let x = this;
@@ -169,18 +177,7 @@ export default {
       }, 1000);
     },
   },
-  // updated(){
-  //   console.log('done')
-  //   console.log(this.selectedIndex)
-  //   if (this.selectedIndex == false){
-  //     setTimeout(() => {
-  //       // this.$refs.mainnavitem[0].click()
-  //       this.selectedIndex = 0
-  //       this.bounce(0)
-  //
-  //     }, 1000);
-  //   }
-  // },
+
 
 }
 </script>
