@@ -66,7 +66,7 @@ export default {
     }
   },
   mounted: function(){
-    this.$http.get('http://matthewlissner.com/wp-json/wp/v2/svgs/name').then(response => {
+    this.$http.get('http://matthewlissner.com/wp-json/wp/v2/svgs/matthew').then(response => {
       let a = this;
       let promise1 = Promise.resolve(response.text())
       promise1.then(function(value){
