@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <img src="./assets/logo.png">
-    <h1 v-html="myName"></h1>
+    <section class="svgs" v-html="myName"></section>
     <ul class="main-nav">
       <li class="main-nav__item" ref="mainnavitem" v-for="(item, index) in items" :key="index" v-html="item.message" :data-postIndex="index+2" v-on:click="bounce(item); thisPost(item);" v-bind:class="{'main-nav__item--bouncing': itemActive[index]}">
       </li>
@@ -62,14 +62,19 @@ export default {
       slidingRight: false,
       slidingLeft: false,
       slidingUp: false,
-      myName: '<div>sup</div>'
+      myName: ''
     }
   },
   mounted: function(){
-    this.$http.get('http://matthewlissner.com/wp-json/wp/v2/svgs/matthew').then(response => {
-      console.log('yassss')
+    this.$http.get('http://matthewlissner.com/wp-json/wp/v2/svgs/name').then(response => {
+      let a = this;
+      let promise1 = Promise.resolve(response.text())
+      promise1.then(function(value){
+        console.log(value)
+        a.myName = value
+      })
     }, () => {
-      console.log('wtf')
+      console.log('failedddd')
     });
 
     let dt= Date.now();
@@ -88,7 +93,7 @@ export default {
         }
 
       })
-      console.log(x.content)
+      // console.log(x.content)
       if (this.selectedIndex == false){
         setTimeout(() => {
           this.$refs.mainnavitem[0].click()
@@ -256,6 +261,7 @@ a {
 .svgs {
   position: relative;
   text-align: left;
+  min-height: 197px;
   @media(min-width: $screen-sm-min){
       text-align: center;
   }
