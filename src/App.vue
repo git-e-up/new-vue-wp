@@ -1,7 +1,10 @@
 <template>
   <div id="app">
     <img src="./assets/logo.png">
-    <section class="svgs" v-html="myName"></section>
+    <section class="svgs">
+      <span v-html="myName"></span>
+      <span v-html="myPhoto"></span>
+    </section>
     <ul class="main-nav">
       <li class="main-nav__item" ref="mainnavitem" v-for="(item, index) in items" :key="index" v-html="item.message" :data-postIndex="index+2" v-on:click="bounce(item); thisPost(item);" v-bind:class="{'main-nav__item--bouncing': itemActive[index]}">
       </li>
@@ -62,7 +65,8 @@ export default {
       slidingRight: false,
       slidingLeft: false,
       slidingUp: false,
-      myName: ''
+      myName: '',
+      myPhoto: ''
     }
   },
   mounted: function(){
@@ -72,6 +76,17 @@ export default {
       promise1.then(function(value){
         console.log(value)
         a.myName = value
+      })
+    }, () => {
+      console.log('failedddd')
+    });
+
+    this.$http.get('http://matthewlissner.com/wp-json/wp/v2/svgs/name').then(response => {
+      let b = this;
+      let promise1 = Promise.resolve(response.text())
+      promise1.then(function(value){
+        console.log(value)
+        b.myPhoto = value
       })
     }, () => {
       console.log('failedddd')
@@ -261,7 +276,6 @@ a {
 .svgs {
   position: relative;
   text-align: left;
-  min-height: 197px;
   @media(min-width: $screen-sm-min){
       text-align: center;
   }
