@@ -87,38 +87,38 @@ export default {
       promise1.then(function(value){
         console.log(value)
         b.myPhoto = value
+        let dt= Date.now();
+        b.$http.get(`http://matthewlissner.com/wp-json/wp/v2/hot_sauces?filter[orderby]=date&order=asc&datenow=${dt}`).then(response => {
+          let x = b;
+          response.body.forEach(function(val){
+            x.items.push({message: val.title.rendered})
+            x.itemActive.push(false)
+
+            let repeatables = JSON.parse( val.repeatable_autocomplete );
+            if (repeatables){
+              x.content.push([{contentMain: val.content.rendered},{repstuff: repeatables}])
+            }
+            else {
+              x.content.push( [{contentMain: val.content.rendered}])
+            }
+
+          })
+          // console.log(x.content)
+          if (x.selectedIndex == false){
+            setTimeout(() => {
+              x.$refs.mainnavitem[0].click()
+            }, 500);
+          }
+        }, () => {
+          console.log('sorry about that');
+          this.isActive = true;
+          // error callback
+        });
       })
     }, () => {
       console.log('failedddd')
     });
 
-    let dt= Date.now();
-    this.$http.get(`http://matthewlissner.com/wp-json/wp/v2/hot_sauces?filter[orderby]=date&order=asc&datenow=${dt}`).then(response => {
-      let x = this;
-      response.body.forEach(function(val){
-        x.items.push({message: val.title.rendered})
-        x.itemActive.push(false)
-
-        let repeatables = JSON.parse( val.repeatable_autocomplete );
-        if (repeatables){
-          x.content.push([{contentMain: val.content.rendered},{repstuff: repeatables}])
-        }
-        else {
-          x.content.push( [{contentMain: val.content.rendered}])
-        }
-
-      })
-      // console.log(x.content)
-      if (this.selectedIndex == false){
-        setTimeout(() => {
-          this.$refs.mainnavitem[0].click()
-        }, 500);
-      }
-    }, () => {
-      console.log('sorry about that');
-      this.isActive = true;
-      // error callback
-    });
   },
   methods: {
     dontBounce: function(){
@@ -162,8 +162,10 @@ export default {
         }
         thisNext.dontBounce()
         thisNext.itemActive[thisNext.selectedIndex] = true
+      }, 1500)
+      setTimeout(function(){
         thisNext.slidingRight = false
-      }, 1400)
+      }, 3000)
     },
     prevPost: function () {
       let thisPrev = this
@@ -176,8 +178,10 @@ export default {
         }
         thisPrev.dontBounce()
         thisPrev.itemActive[thisPrev.selectedIndex] = true
+      }, 1500)
+      setTimeout(function(){
         thisPrev.slidingLeft = false
-      }, 1400)
+      }, 3000)
     },
     openModal: function (postIndex) {
       this.modalBackground = true;
