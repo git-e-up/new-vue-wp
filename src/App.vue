@@ -1,6 +1,5 @@
 <template>
   <div id="app">
-    <img src="./assets/logo.png">
     <section class="svgs">
       <span v-html="myName"></span>
       <span v-html="myPhoto"></span>
