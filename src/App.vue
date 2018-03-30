@@ -218,7 +218,7 @@ export default {
 </style>
 <style lang="scss">
 img {
-  display: none;
+  // display: none;
 }
 // run: sass --watch styles/style.scss:output.css
 * {
