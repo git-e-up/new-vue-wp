@@ -1,8 +1,10 @@
 <template>
   <div id="app">
     <section class="svgs">
-      <span v-html="myName"></span>
-      <span v-html="myPhoto"></span>
+      <MyName v-html="myName"/>
+      <MyFace v-html="myFace"/>
+      <!-- <span v-html="myName"></span> -->
+      <!-- <span v-html="myPhoto"></span> -->
     </section>
     <ul class="main-nav">
       <li class="main-nav__item" ref="mainnavitem" v-for="(item, index) in items" :key="index" v-html="item.message" :data-postIndex="index+2" v-on:click="bounce(item); thisPost(item);" v-bind:class="{'main-nav__item--bouncing': itemActive[index]}">
@@ -42,12 +44,16 @@
 
 <script>
 import HelloWorld from './components/HelloWorld.vue'
+import MyName from './components/NameSVG.vue'
+import MyFace from './components/FaceSVG.vue'
 
 
 export default {
   name: 'app',
   components: {
-    HelloWorld
+    HelloWorld,
+    MyName,
+    MyFace
   },
   data: function() {
     return{
@@ -65,57 +71,35 @@ export default {
       slidingLeft: false,
       slidingUp: false,
       myName: '',
+      myFace: '',
       myPhoto: ''
     }
   },
   mounted: function(){
-    this.$http.get('http://matthewlissner.com/wp-json/wp/v2/svgs/matthew').then(response => {
-      let a = this;
-      let promise1 = Promise.resolve(response.text())
-      promise1.then(function(value){
-        console.log(value)
-        a.myName = value
+    let dt= Date.now();
+    this.$http.get(`http://matthewlissner.com/wp-json/wp/v2/hot_sauces?filter[orderby]=date&order=asc&datenow=${dt}`).then(response => {
+      let x = this;
+      response.body.forEach(function(val){
+        x.items.push({message: val.title.rendered})
+        x.itemActive.push(false)
+        let repeatables = JSON.parse( val.repeatable_autocomplete );
+        if (repeatables){
+          x.content.push([{contentMain: val.content.rendered},{repstuff: repeatables}])
+        }
+        else {
+          x.content.push( [{contentMain: val.content.rendered}])
+        }
       })
+      console.log(x.content)
+      if (this.selectedIndex == false){
+        setTimeout(() => {
+          this.$refs.mainnavitem[0].click()
+        }, 500);
+      }
     }, () => {
-      console.log('failedddd')
-    });
-
-    this.$http.get('http://matthewlissner.com/wp-json/wp/v2/svgs/name').then(response => {
-      let b = this;
-      let promise1 = Promise.resolve(response.text())
-      promise1.then(function(value){
-        console.log(value)
-        b.myPhoto = value
-        let dt= Date.now();
-        b.$http.get(`http://matthewlissner.com/wp-json/wp/v2/hot_sauces?filter[orderby]=date&order=asc&datenow=${dt}`).then(response => {
-          let x = b;
-          response.body.forEach(function(val){
-            x.items.push({message: val.title.rendered})
-            x.itemActive.push(false)
-
-            let repeatables = JSON.parse( val.repeatable_autocomplete );
-            if (repeatables){
-              x.content.push([{contentMain: val.content.rendered},{repstuff: repeatables}])
-            }
-            else {
-              x.content.push( [{contentMain: val.content.rendered}])
-            }
-
-          })
-          // console.log(x.content)
-          if (x.selectedIndex == false){
-            setTimeout(() => {
-              x.$refs.mainnavitem[0].click()
-            }, 500);
-          }
-        }, () => {
-          console.log('sorry about that');
-          this.isActive = true;
-          // error callback
-        });
-      })
-    }, () => {
-      console.log('failedddd')
+      console.log('sorry about that');
+      this.isActive = true;
+      // error callback
     });
 
   },
@@ -488,93 +472,93 @@ a {
 }
 
 
-//animation stuff
-#matt-img {
+// //animation stuff
+// #matt-img {
+//
+//   position: absolute;
+//   top: 0;
+//   right: 0;
+//   display: inline-block;
+//   height: 100%;
+//   max-width: 30%;
+//   @media(min-width: $screen-sm-min){
+//       max-width: 15%;
+//   }
+//   cursor: pointer;
+//   path {
+//     stroke: $blue-steel;
+//     stroke-width: 20;
+//     stroke-dasharray: 8000;
+//     stroke-dashoffset: 8000;
+//     animation: drawMatt 4s 1 linear;
+//     animation-fill-mode: forwards;
+//   }
+//   &:active {
+//
+//     path {
+//       animation: drawMatt2 4s 1 ease;
+//       animation-fill-mode: forwards;
+//     }
+//   }
+// }
+//
+// @keyframes drawMatt {
+//   to {
+//     stroke-dashoffset: 0;
+//     fill: $blue-steel;
+//     fill-opacity: 1;
+//   }
+// }
+// @keyframes drawMatt2 {
+//   to {
+//     stroke-dashoffset: 0;
+//     fill: $blue-steel;
+//     fill-opacity: 1;
+//   }
+// }
 
-  position: absolute;
-  top: 0;
-  right: 0;
-  display: inline-block;
-  height: 100%;
-  max-width: 30%;
-  @media(min-width: $screen-sm-min){
-      max-width: 15%;
-  }
-  cursor: pointer;
-  path {
-    stroke: $blue-steel;
-    stroke-width: 20;
-    stroke-dasharray: 8000;
-    stroke-dashoffset: 8000;
-    animation: drawMatt 4s 1 linear;
-    animation-fill-mode: forwards;
-  }
-  &:active {
-
-    path {
-      animation: drawMatt2 4s 1 ease;
-      animation-fill-mode: forwards;
-    }
-  }
-}
-
-@keyframes drawMatt {
-  to {
-    stroke-dashoffset: 0;
-    fill: $blue-steel;
-    fill-opacity: 1;
-  }
-}
-@keyframes drawMatt2 {
-  to {
-    stroke-dashoffset: 0;
-    fill: $blue-steel;
-    fill-opacity: 1;
-  }
-}
-
-#matthew-svg {
-  max-width: 60%;
-  max-height: 95%;
-  position: relative;
-  display: inline-block;
-  cursor: pointer;
-  @media(min-width: $screen-sm-min) {
-      max-width: 40%;
-  }
-  path {
-    fill-opacity: 0;
-    stroke: $blue-steel;
-    stroke-width: 2;
-    stroke-dasharray: 870;
-    stroke-dashoffset: 870;
-    animation: drawSVG 4s 1 linear;
-    animation-fill-mode: forwards;
-  }
-  &:active {
-
-    path {
-      animation: drawSVG2 4s 1 ease;
-      animation-fill-mode: forwards;
-    }
-  }
-}
-
-@keyframes drawSVG {
-
-  to {
-    stroke-dashoffset: 0;
-    fill: $blue-steel;
-    fill-opacity: 1;
-  }
-}
-@keyframes drawSVG2 {
-  to {
-    stroke-dashoffset: 0;
-    fill: $blue-steel;
-    fill-opacity: 1;
-  }
-}
+// #matthew-svg {
+//   max-width: 60%;
+//   max-height: 95%;
+//   position: relative;
+//   display: inline-block;
+//   cursor: pointer;
+//   @media(min-width: $screen-sm-min) {
+//       max-width: 40%;
+//   }
+//   path {
+//     fill-opacity: 0;
+//     stroke: $blue-steel;
+//     stroke-width: 2;
+//     stroke-dasharray: 870;
+//     stroke-dashoffset: 870;
+//     animation: drawSVG 4s 1 linear;
+//     animation-fill-mode: forwards;
+//   }
+//   &:active {
+//
+//     path {
+//       animation: drawSVG2 4s 1 ease;
+//       animation-fill-mode: forwards;
+//     }
+//   }
+// }
+//
+// @keyframes drawSVG {
+//
+//   to {
+//     stroke-dashoffset: 0;
+//     fill: $blue-steel;
+//     fill-opacity: 1;
+//   }
+// }
+// @keyframes drawSVG2 {
+//   to {
+//     stroke-dashoffset: 0;
+//     fill: $blue-steel;
+//     fill-opacity: 1;
+//   }
+// }
 
 .main-nav__item--bouncing {
   animation: bounce 1.2s;
