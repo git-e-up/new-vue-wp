@@ -21,7 +21,7 @@ export default {
       let a = this;
       let promise1 = Promise.resolve(response.text())
       promise1.then(function(value){
-        console.log(value)
+        // console.log(value)
         a.myName = value
       })
     }, () => {
